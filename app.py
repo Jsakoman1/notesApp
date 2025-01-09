@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
 
 # Update your database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://super:Villigen5234@localhost:9999/dev_notes'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://super:Villigen5234@localhost:9999/dev_notes')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
