@@ -4,12 +4,15 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Update your database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://super:Villigen5234@sakoman-4290.postgres.pythonanywhere-services.com:14290/dev_notes'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://super:Villigen5234@localhost:9999/dev_notes'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Define the Note model
+# Define the Note model with schema
 class Note(db.Model):
+    __tablename__ = 'notes'
+    __table_args__ = {'schema': 'public'}  # Specify the schema (public)
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)
@@ -37,4 +40,7 @@ def create_note():
     return render_template('create_note.html')
 
 if __name__ == '__main__':
+    # Make sure to create the tables
+    with app.app_context():
+        db.create_all()  # Creates the tables in the database if they don't exist
     app.run(debug=True)
