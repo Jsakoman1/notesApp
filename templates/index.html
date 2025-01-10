@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="header">
+        <h1>Notes App</h1>
+        <p>by Sakoman</p>
+    </header>
+    <div class="main-content">
+        <div class="container">
+            <div class="actions">
+                <a href="/create" class="btn btn-create">Create a New Note</a>
+            </div>
+            <div class="note-container">
+                {% for note in notes %}
+                <div class="note-card">
+                    <h3>{{ note.title }}</h3>
+                    <p>{{ note.content }}</p>
+                    <div class="note-actions">
+                        <form action="/delete/{{ note.id }}" method="POST" style="display:inline;">
+                            <button class="btn btn-delete" type="submit">Delete</button>
+                        </form>
+                        <a href="/edit/{{ note.id }}" class="btn btn-edit">Edit</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

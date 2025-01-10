@@ -70,7 +70,7 @@ def edit_note(note_id):
     return render_template('edit_note.html', note=note)
 
 # API endpoint: Delete a note
-@app.route('/api/v1/notes/<int:note_id>', methods=['POST'])
+@app.route('/delete/<int:note_id>', methods=['POST'])
 def delete_note(note_id):
     note = Note.query.get(note_id)
     if not note:
@@ -83,13 +83,7 @@ def delete_note(note_id):
 @app.route('/')
 def index():
     notes = Note.query.all()
-    return render_template('note_list.html', notes=notes)
-
-# Before request to handle method override for DELETE via form
-@app.before_request
-def before_request():
-    if request.method == "POST" and "_method" in request.form:
-        request.method = request.form["_method"]
+    return render_template('index.html', notes=notes)
 
 if __name__ == '__main__':
     # Ensure tables are created
