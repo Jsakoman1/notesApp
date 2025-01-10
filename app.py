@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -30,14 +30,17 @@ def get_notes():
     notes_list = [{'id': note.id, 'title': note.title, 'content': note.content, 'created_at': note.created_at} for note in notes]
     return jsonify(notes_list)
 
-# API endpoint: Create a note
-@app.route('/api/v1/notes', methods=['POST'])
+# Route to create a new note
+@app.route('/create', methods=['GET', 'POST'])
 def create_note():
-    data = request.get_json()
-    new_note = Note(title=data['title'], content=data['content'])
-    db.session.add(new_note)
-    db.session.commit()
-    return jsonify({'message': 'Note created successfully!'}), 201
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        new_note = Note(title=title, content=content)
+        db.session.add(new_note)
+        db.session.commit()
+        return redirect('/')
+    return render_template('create_note.html')
 
 # API endpoint: Get a single note
 @app.route('/api/v1/notes/<int:note_id>', methods=['GET'])
@@ -56,6 +59,14 @@ def delete_note(note_id):
     db.session.delete(note)
     db.session.commit()
     return jsonify({'message': 'Note deleted successfully!'})
+
+# Route to display all notes
+@app.route('/')
+def index():
+    notes = Note.query.all()
+    return render_template('note_list.html', notes=notes)
+
+
 
 if __name__ == '__main__':
     # Ensure tables are created
