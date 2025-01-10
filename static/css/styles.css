@@ -1,11 +1,9 @@
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    background-color: #f5f5f7;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #a2d9ff, #f4f4f9);
-    color: #333;
-    line-height: 1.6;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -15,213 +13,186 @@ body {
 
 /* Header Styles */
 .header {
-    background: linear-gradient(135deg, #74b9ff, #a2d9ff);
-    color: white;
+    background-color: #ffffff;
     text-align: center;
-    padding: 50px 20px;
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    max-width: 800px;
-    width: 90%;
-    margin-bottom: 30px;
-    animation: slideInDown 1s ease-out;
+    padding: 40px 20px;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 .header h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 3.5em;
+    font-size: 2.8em;
+    color: #333;
     margin: 0;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    animation: fadeInUp 1.5s ease-out;
 }
 
 .header p {
-    font-family: 'Roboto', sans-serif;
     font-size: 1.2em;
-    margin: 10px 0 0;
-    letter-spacing: 1px;
-    color: #f1f1f1;
-    animation: fadeInUp 1.7s ease-out;
+    color: #888;
 }
 
 /* Main Content */
 .main-content {
-    margin: 0 auto;
-    padding: 30px;
-    max-width: 800px;
-    background-color: rgba(255, 255, 255, 0.9);
+    width: 100%;
+    max-width: 900px;
+    padding: 30px 20px;
+    background-color: #ffffff;
     border-radius: 15px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    animation: fadeInUp 1.2s ease-out;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
 }
 
 /* Actions */
 .actions {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     text-align: center;
 }
 
 .actions .btn-create {
     display: inline-block;
-    padding: 12px 25px;
+    padding: 14px 35px;
     font-size: 1.2em;
     color: white;
-    background-color: #ff7f50;
+    background-color: #007aff;
     border: none;
-    border-radius: 8px;
+    border-radius: 25px;
     text-decoration: none;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    animation: fadeInUp 1.5s ease-out;
 }
 
 .actions .btn-create:hover {
-    background-color: #ff6347;
+    background-color: #0051cc;
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Adding subtle shadow effect */
 }
 
 /* Note Container */
 .note-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    animation: fadeInUp 1.5s ease-out;
+    gap: 25px;
 }
 
 .note-card {
     background-color: #ffffff;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
+    border: 1px solid #e2e2e2;
+    border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: slideInUp 1s ease-out;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.2s ease;
 }
 
-.note-card h3 {
-    margin: 0;
-    font-size: 1.8em;  /* Increased font size */
-    color: #333;
-    font-weight: bold;
-    animation: fadeInUp 1.5s ease-out;
+.note-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.note-card p {
-    font-size: 1em;
-    color: #555;
-    animation: fadeInUp 1.7s ease-out;
-}
-
-/* Note Actions */
-.note-actions {
-    margin-top: 15px;
+.note-header {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
-.note-actions .btn {
-    padding: 8px 15px;
-    font-size: 1em;
+.note-header h3 {
+    font-size: 1.7em;
+    margin: 0;
+    font-weight: bold;
+    color: #333;
+}
+
+.note-header form {
+    margin: 0;
+}
+
+.note-header .btn-delete {
+    background: none;
     border: none;
-    border-radius: 5px;
+    font-size: 1.8em;
+    color: #e74c3c;
     cursor: pointer;
-    text-decoration: none;
-    color: white;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: color 0.2s ease;
 }
 
-.note-actions .btn-delete {
-    background-color: #e74c3c;
+.note-header .btn-delete:hover {
+    color: #c0392b;
 }
 
-.note-actions .btn-delete:hover {
-    background-color: #c0392b;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Adding subtle shadow effect */
+/* Button Styling */
+.btn-delete {
+    font-size: 1.8em;
+    background-color: transparent;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-.note-actions .btn-edit {
-    background-color: #ffa500;
-}
-
-.note-actions .btn-edit:hover {
-    background-color: #ff8c00;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Adding subtle shadow effect */
+.btn-delete:hover {
+    color: #c0392b;
 }
 
 /* Form */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .form-group label {
     display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
+    font-size: 1.3em;
+    color: #333;
+    margin-bottom: 10px;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 10px;
-    font-size: 1em;
+    padding: 15px;
+    font-size: 1.1em;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 12px;
     box-sizing: border-box;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: #80bdff;
+    border-color: #007aff;
     outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);  /* Adding a subtle glow around the input */
 }
 
 /* Form Actions */
 .form-actions {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 .btn-save {
-    background-color: #4caf50;
+    background-color: #007aff;
     color: white;
-    padding: 10px 20px;
-    font-size: 1em;
-    border-radius: 5px;
+    padding: 14px 22px;
+    font-size: 1.2em;
+    border-radius: 25px;
     text-decoration: none;
-    text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-save:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Adding subtle shadow effect */
+    background-color: #0051cc;
 }
 
-/* Cancel Button */
 .btn-cancel {
-    background-color: #f44336; /* Red */
-    color: white;
-    padding: 10px 20px;
-    font-size: 1em;
-    border-radius: 5px;
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 14px 22px;
+    font-size: 1.2em;
+    border-radius: 25px;
     text-decoration: none;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-cancel:hover {
-    background-color: #d32f2f; /* Darker red */
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Adding subtle shadow effect */
+    background-color: #e1e1e1;
 }
 
 /* Animations */
@@ -234,55 +205,71 @@ body {
     }
 }
 
-@keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Add cursor pointer to clickable elements */
+.note-card {
+    cursor: pointer;
 }
 
-@keyframes slideInDown {
-    0% {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Mobile Responsiveness */
+/* Responsive Design */
 @media (max-width: 768px) {
     .header h1 {
-        font-size: 2.5em;
-    }
-
-    .note-card h3 {
-        font-size: 1.3em;
-    }
-
-    .actions .btn-create {
-        font-size: 1em;
-        padding: 10px 20px;
+        font-size: 2.2em;
     }
 
     .main-content {
         padding: 20px;
+    }
+
+    .note-card {
+        padding: 15px;
+    }
+
+    .btn-create {
+        padding: 12px 28px;
+        font-size: 1.1em;
+    }
+
+    .btn-save,
+    .btn-cancel {
+        padding: 12px 18px;
+        font-size: 1.1em;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 12px;
+        font-size: 1em;
+    }
+}
+
+/* For Mobile Devices */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.8em;
+    }
+
+    .main-content {
+        padding: 15px;
+    }
+
+    .note-card {
+        padding: 12px;
+    }
+
+    .btn-create {
+        padding: 10px 25px;
+        font-size: 1em;
+    }
+
+    .btn-save,
+    .btn-cancel {
+        padding: 10px 15px;
+        font-size: 1em;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 1em;
     }
 }
