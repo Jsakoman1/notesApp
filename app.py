@@ -54,21 +54,42 @@ def get_note(note_id):
         return jsonify({'error': 'Note not found'}), 404
     return jsonify({'id': note.id, 'title': note.title, 'content': note.content, 'created_at': note.created_at})
 
+# Route to edit a note
+@app.route('/edit/<int:note_id>', methods=['GET', 'POST'])
+def edit_note(note_id):
+    note = Note.query.get(note_id)
+    if not note:
+        return jsonify({'error': 'Note not found'}), 404
+    
+    if request.method == 'POST':
+        note.title = request.form['title']
+        note.content = request.form['content']
+        db.session.commit()
+        return redirect('/')
+    
+    return render_template('edit_note.html', note=note)
+
 # API endpoint: Delete a note
-@app.route('/api/v1/notes/<int:note_id>', methods=['DELETE'])
+@app.route('/api/v1/notes/<int:note_id>', methods=['POST'])
 def delete_note(note_id):
     note = Note.query.get(note_id)
     if not note:
         return jsonify({'error': 'Note not found'}), 404
     db.session.delete(note)
     db.session.commit()
-    return jsonify({'message': 'Note deleted successfully!'})
+    return redirect('/')
 
 # Route to display all notes
 @app.route('/')
 def index():
     notes = Note.query.all()
     return render_template('note_list.html', notes=notes)
+
+# Before request to handle method override for DELETE via form
+@app.before_request
+def before_request():
+    if request.method == "POST" and "_method" in request.form:
+        request.method = request.form["_method"]
 
 if __name__ == '__main__':
     # Ensure tables are created

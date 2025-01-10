@@ -14,6 +14,11 @@
                 <strong>{{ note.title }}</strong><br>
                 <em>Created at: {{ note.created_at }}</em><br>
                 <p>{{ note.content }}</p>
+                <a href="/edit/{{ note.id }}">Edit</a> | 
+                <form action="/api/v1/notes/{{ note.id }}" method="POST" style="display:inline;">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit">Delete</button>
+                </form>
             </li>
         {% endfor %}
     </ul>
