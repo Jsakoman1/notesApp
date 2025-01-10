@@ -4,11 +4,15 @@ import os
 
 app = Flask(__name__)
 
-# Configure database URI from environment variables
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    'DATABASE_URL', 
-    'postgresql://super:Villigen5234@localhost:9999/dev_notes'
-)
+# Use PostgreSQL for production and SQLite for local development
+if os.getenv('FLASK_ENV') == 'development':
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dev_notes.db'  # Local SQLite database
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+        'DATABASE_URL',  # Production PostgreSQL (set in PythonAnywhere)
+        'postgresql://super:Villigen5234@localhost:9999/dev_notes'  # Fallback for local testing if needed
+    )
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -65,8 +69,6 @@ def delete_note(note_id):
 def index():
     notes = Note.query.all()
     return render_template('note_list.html', notes=notes)
-
-
 
 if __name__ == '__main__':
     # Ensure tables are created
