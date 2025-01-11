@@ -5,46 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes App</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/dragDrop.js') }}" defer></script>
 </head>
 <body>
     <header class="header">
-        <h1>Notes</h1>
+        <h1>NOTES</h1>
         <p>by Sakoman</p>
     </header>
-    <div class="main-content">
-        <div class="container">
-            <div class="actions">
-                <a href="/create" class="btn btn-create">Create a New Note</a>
-            </div>
-            <div class="note-container">
-                {% for note in notes %}
-                <div class="note-card" onclick="window.location.href='/edit/{{ note.id }}';">
-                    <div class="note-header">
-                        <h3>{{ note.title }}</h3>
-                        <form action="/delete/{{ note.id }}" method="POST" style="display:inline;" onsubmit="return confirmDelete(event)">
-                            <button class="btn btn-delete" type="submit" onclick="handleDeleteClick(event)">&#10005;</button>
-                        </form>
-                    </div>
-                    <p>{{ note.content }}</p>
-                </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>Folders</h2>
+            <ul>
+                {% for folder in folders %}
+                    <li id="folder-{{ folder.id }}" class="folder" data-folder-id="{{ folder.id }}" draggable="true" ondragover="allowDrop(event)" ondrop="drop(event)">
+                        <a href="javascript:void(0);" class="folder-toggle">{{ folder.name }}</a>
+                        <ul id="folder-{{ folder.id }}-notes" style="display:block;">
+                            {% for note in folder.notes %}
+                            <li id="note-{{ note.id }}" class="note" draggable="true" data-note-id="{{ note.id }}" onclick="showNoteContent('{{ note.id }}')" ondragstart="dragStart(event)">
+                                    {{ note.title }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
                 {% endfor %}
+            </ul>
+            <button id="create-folder-btn">Create Folder</button>
+            <button id="create-note-btn">Create Note</button>
+        </div>
+
+        <div class="content">
+            <h2>Select a Note to Edit</h2>
+            <div id="note-edit-form" style="display:none;">
+                <h3>Edit Note</h3>
+                <form id="edit-note-form">
+                    <input type="hidden" name="note_id" id="note-id">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="note-title" required>
+
+                    <label for="content">Content</label>
+                    <textarea name="content" id="note-content" required></textarea>
+
+                    <label for="folder">Folder</label>
+                    <select name="folder" id="note-folder">
+                        {% for folder in folders %}
+                            <option value="{{ folder.id }}">{{ folder.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+
+            <div id="new-note-form" style="display:none;">
+                <h3>Create New Note</h3>
+                <form id="create-note-form">
+                    <label for="new-note-title">Title</label>
+                    <input type="text" id="new-note-title" required>
+
+                    <label for="new-note-content">Content</label>
+                    <textarea id="new-note-content" required></textarea>
+
+                    <button type="submit">Create Note</button>
+                </form>
             </div>
         </div>
     </div>
 
-    <script>
-        // Prevent the click on the delete button from triggering the edit action
-        function handleDeleteClick(event) {
-            event.stopPropagation(); // Stop the event from reaching the parent element
-        }
-
-        function confirmDelete(event) {
-            if (!confirm("Are you sure you want to delete this note?")) {
-                event.preventDefault();  // Prevent form submission
-                return false;  // Stop further event processing
-            }
-            return true;  // Allow form submission if the user confirms the delete
-        }
-    </script>
 </body>
 </html>
