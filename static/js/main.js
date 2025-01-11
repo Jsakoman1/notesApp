@@ -71,4 +71,73 @@
             }
         });
 
-        
+// Event listener for folder actions (Rename & Delete)
+document.querySelector('.container').addEventListener('click', function(event) {
+    if (event.target.classList.contains('edit-folder-btn')) {
+        const folderId = event.target.getAttribute('data-folder-id');
+        editFolder(folderId);
+    } else if (event.target.classList.contains('delete-folder-btn')) {
+        const folderId = event.target.getAttribute('data-folder-id');
+        deleteFolder(folderId);
+    }
+});
+
+// Edit folder name
+function editFolder(folderId) {
+    const newName = prompt("Enter new folder name:");
+    if (newName) {
+        fetch(`/api/v1/folders/${folderId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: newName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.name) {
+                // Update the folder name in the UI
+                document.querySelector(`#folder-${folderId} .folder-toggle`).innerText = data.name;
+            }
+        })
+        .catch(error => console.error('Error editing folder:', error));
+    }
+}
+
+
+// Delete folder and all notes inside it
+function deleteFolder(folderId) {
+    if (confirm("Are you sure you want to delete this folder and all notes inside it?")) {
+        // Fetch the notes associated with the folder to delete them
+        fetch(`/api/v1/folders/${folderId}/notes`, {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(notes => {
+            // Delete each note associated with the folder
+            const deleteNotePromises = notes.map(note => {
+                return fetch(`/api/v1/notes/${note.id}`, {
+                    method: 'DELETE'
+                });
+            });
+
+            // Wait for all notes to be deleted
+            Promise.all(deleteNotePromises)
+                .then(() => {
+                    // After deleting all notes, delete the folder
+                    return fetch(`/api/v1/folders/${folderId}`, {
+                        method: 'DELETE'
+                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        // Remove the folder from the UI
+                        document.getElementById(`folder-${folderId}`).remove();
+                    } else {
+                        alert('Error deleting folder');
+                    }
+                })
+                .catch(error => console.error('Error deleting notes or folder:', error));
+        })
+        .catch(error => console.error('Error fetching notes to delete:', error));
+    }
+}

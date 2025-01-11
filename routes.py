@@ -43,6 +43,7 @@ def get_note(note_id):
     else:
         return jsonify({"error": "Note not found"}), 404
 
+# Create folder
 @main_routes.route('/api/v1/folders', methods=['POST'])
 def create_folder():
     folder_data = request.get_json()
@@ -50,6 +51,29 @@ def create_folder():
     db.session.add(new_folder)
     db.session.commit()
     return jsonify(id=new_folder.id, name=new_folder.name), 201
+
+# Rename folder
+@main_routes.route('/api/v1/folders/<int:folder_id>', methods=['PUT'])
+def edit_folder(folder_id):
+    folder_data = request.get_json()
+    folder = Folder.query.get(folder_id)
+    if folder:
+        folder.name = folder_data['name']
+        db.session.commit()
+        return jsonify({"id": folder.id, "name": folder.name}), 200
+    else:
+        return jsonify({"error": "Folder not found"}), 404
+
+# Delete folder
+@main_routes.route('/api/v1/folders/<int:folder_id>', methods=['DELETE'])
+def delete_folder(folder_id):
+    folder = Folder.query.get(folder_id)
+    if folder:
+        db.session.delete(folder)
+        db.session.commit()
+        return jsonify({"message": "Folder deleted successfully"}), 200
+    else:
+        return jsonify({"error": "Folder not found"}), 404
 
 @main_routes.route('/api/v1/notes/<int:note_id>/move', methods=['PUT'])
 def move_note(note_id):
@@ -64,3 +88,17 @@ def move_note(note_id):
         db.session.commit()
         return jsonify({"success": True, "note": {"id": note.id, "title": note.title, "folder_id": note.folder_id}}), 200
     return jsonify({"error": "Note or Folder not found"}), 404
+
+@main_routes.route('/api/v1/folders/<int:folder_id>/notes', methods=['GET'])
+def get_notes_in_folder(folder_id):
+    folder = Folder.query.get(folder_id)
+    if folder:
+        notes = Note.query.filter_by(folder_id=folder_id).all()
+        return jsonify([{
+            'id': note.id,
+            'title': note.title,
+            'content': note.content,
+            'folder_id': note.folder_id
+        } for note in notes]), 200
+    else:
+        return jsonify({"error": "Folder not found"}), 404

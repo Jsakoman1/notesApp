@@ -36,6 +36,6 @@ if __name__ == '__main__':
     with app.app_context():
         # Create tables if they don't exist
         db.create_all()
-        initialize_db()
+        initialize_db(app)  # Pass 'app' as an argument
 
     app.run(debug=True)

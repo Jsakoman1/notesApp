@@ -19,16 +19,18 @@
             <h2>Folders</h2>
             <ul>
                 {% for folder in folders %}
-                    <li id="folder-{{ folder.id }}" class="folder" data-folder-id="{{ folder.id }}" draggable="true" ondragover="allowDrop(event)" ondrop="drop(event)">
-                        <a href="javascript:void(0);" class="folder-toggle">{{ folder.name }}</a>
-                        <ul id="folder-{{ folder.id }}-notes" style="display:block;">
-                            {% for note in folder.notes %}
-                            <li id="note-{{ note.id }}" class="note" draggable="true" data-note-id="{{ note.id }}" onclick="showNoteContent('{{ note.id }}')" ondragstart="dragStart(event)">
-                                    {{ note.title }}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
+                <li id="folder-{{ folder.id }}" class="folder" data-folder-id="{{ folder.id }}" draggable="true" ondragover="allowDrop(event)" ondrop="drop(event)">
+                    <a href="javascript:void(0);" class="folder-toggle">{{ folder.name }}</a>
+                    <button class="edit-folder-btn" data-folder-id="{{ folder.id }}">Rename</button>
+                    <button class="delete-folder-btn" data-folder-id="{{ folder.id }}">Delete</button>
+                    <ul id="folder-{{ folder.id }}-notes" style="display:block;">
+                        {% for note in folder.notes %}
+                        <li id="note-{{ note.id }}" class="note" draggable="true" data-note-id="{{ note.id }}" onclick="showNoteContent('{{ note.id }}')" ondragstart="dragStart(event)">
+                            {{ note.title }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
                 {% endfor %}
             </ul>
             <button id="create-folder-btn">Create Folder</button>
