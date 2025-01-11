@@ -12,7 +12,6 @@ if os.getenv('FLASK_ENV') == 'development':
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
         'DATABASE_URL',
-        'postgresql://super:Villigen5234@localhost:9999/dev_notes'
     )
 
 
@@ -21,13 +20,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 app.register_blueprint(main_routes)
 
-def initialize_db():
-    # Check if the "All Notes" folder exists
-    all_notes_folder = Folder.query.filter_by(name='All Notes').first()
-    if not all_notes_folder:
-        all_notes_folder = Folder(name='All Notes')
-        db.session.add(all_notes_folder)
-        db.session.commit() 
+def initialize_db(app):
+    with app.app_context():
+        # Create tables if they don't exist
+        db.create_all()
+        # Check if the "All Notes" folder exists
+        all_notes_folder = Folder.query.filter_by(name='All Notes').first()
+        if not all_notes_folder:
+            all_notes_folder = Folder(name='All Notes')
+            db.session.add(all_notes_folder)
+            db.session.commit()
 
 # Ensure tables and default folder exist
 if __name__ == '__main__':
