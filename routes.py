@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify, render_template
 from db import db, Folder, Note
+from openai import OpenAI
+
+client = OpenAI()
 
 main_routes = Blueprint('main_routes', __name__)
 
@@ -102,3 +105,32 @@ def get_notes_in_folder(folder_id):
         } for note in notes]), 200
     else:
         return jsonify({"error": "Folder not found"}), 404
+
+
+@main_routes.route('/api/v1/notes/generate', methods=['POST'])
+def generate_note():
+    data = request.get_json()
+    user_input = data.get('input')
+    folder_id = data.get('folder_id')
+    user_title = data.get('title')
+
+    if not user_input:
+        return jsonify({"error": "Input is required"}), 400
+    if not user_title:
+        return jsonify({"error": "Title is required"}), 400
+
+    try:
+        response = client.chat.completions.create(model="gpt-3.5-turbo",  # or "gpt-4"
+        messages=[
+            {"role": "system", "content": "Ti si pomoćnik za bilješke."},
+            {"role": "user", "content": user_input}
+        ])
+        note_content = response.choices[0].message.content
+
+        # Send only generated content back, without saving
+        return jsonify({
+            "content": note_content
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

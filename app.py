@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from db import db, Folder, Note
 from routes import main_routes
+import openai
+
 
 app = Flask(__name__)
 

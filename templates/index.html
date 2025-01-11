@@ -55,7 +55,7 @@
                             <option value="{{ folder.id }}">{{ folder.name }}</option>
                         {% endfor %}
                     </select>
-
+                    <button type="button" class="generate-note-btn">Generate from ChatGPT</button>
                     <button type="submit">Save Changes</button>
                 </form>
             </div>
@@ -68,6 +68,7 @@
 
                     <label for="new-note-content">Content</label>
                     <textarea id="new-note-content" required></textarea>
+                    <button type="button" class="generate-note-btn">Generate from ChatGPT</button>
 
                     <button type="submit">Create Note</button>
                 </form>

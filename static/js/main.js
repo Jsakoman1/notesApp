@@ -141,3 +141,78 @@ function deleteFolder(folderId) {
         .catch(error => console.error('Error fetching notes to delete:', error));
     }
 }
+
+document.querySelector('.container').addEventListener('click', function(event) {
+    if (event.target.classList.contains('generate-note-btn')) {
+        const form = event.target.closest('form');
+        const titleInput = form.querySelector('input[type="text"]'); // Get the title input
+        const contentArea = form.querySelector('textarea');
+        const userTitle = titleInput.value; // Get the title value
+        const userInput = contentArea.value;
+        const folderId = document.querySelector('.folder-toggle').getAttribute('data-folder-id');
+
+        if (!userTitle.trim()) {
+            alert('Title is required.');
+            return;
+        }
+
+        // Call to generate text, but don't save it yet
+        fetch('/api/v1/notes/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: userTitle, // Send the title along with input and folder_id
+                input: userInput,
+                folder_id: folderId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error generating note: ' + data.error);
+            } else {
+                contentArea.value = data.content;  // Update the content area with the generated text
+            }
+        })
+        .catch(error => console.error('Error sending to ChatGPT:', error));
+    }
+
+    // Handle save note button click
+    if (event.target.classList.contains('save-note-btn')) {
+        const form = event.target.closest('form');
+        const titleInput = form.querySelector('input[type="text"]'); // Get the title input
+        const contentArea = form.querySelector('textarea');
+        const userTitle = titleInput.value;
+        const userInput = contentArea.value;
+        const folderId = document.querySelector('.folder-toggle').getAttribute('data-folder-id');
+
+        if (!userTitle.trim()) {
+            alert('Title is required.');
+            return;
+        }
+
+        // Save the note when the save button is clicked
+        fetch('/api/v1/notes/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: userTitle,
+                input: userInput,
+                folder_id: folderId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error saving note: ' + data.error);
+            } else {
+                alert('Note saved successfully!');
+            }
+        })
+        .catch(error => console.error('Error saving note:', error));
+    }
+});
