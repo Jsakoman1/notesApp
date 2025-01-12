@@ -1,4 +1,16 @@
-// Show note content in the edit form
+function sendNoteRequest(url, method, noteData) {
+    return fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(noteData)
+    })
+    .then(response => response.json())
+    .catch(error => {
+        console.error(`Error ${method} note:`, error);
+        alert(`Error ${method} note.`);
+    });
+}
+
 export function showNoteContent(noteId) {
     fetch(`/api/v1/notes/${noteId}`)
         .then(response => response.json())
@@ -26,17 +38,14 @@ export function createNewNote() {
         const title = document.getElementById('new-note-title').value;
         const content = document.getElementById('new-note-content').value;
         const folderId = document.querySelector('.folder-toggle').getAttribute('data-folder-id');
-        fetch('/api/v1/notes', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, content, folder_id: folderId })
-        })
-        .then(response => response.json())
-        .then(() => {
-            document.getElementById('new-note-form').style.display = 'none';
-            window.location.reload();
-        })
-        .catch(error => console.error('Error creating note:', error));
+
+        const noteData = { title, content, folder_id: folderId };
+
+        sendNoteRequest('/api/v1/notes', 'POST', noteData)
+            .then(() => {
+                document.getElementById('new-note-form').style.display = 'none';
+                window.location.reload();
+            });
     });
 }
 
@@ -49,24 +58,68 @@ export function generateNote() {
             const userTitle = titleInput.value;
             const userInput = contentArea.value;
             const folderId = document.querySelector('.folder-toggle').getAttribute('data-folder-id');
+
             if (!userTitle.trim()) {
                 alert('Title is required.');
                 return;
             }
-            fetch('/api/v1/notes/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title: userTitle, input: userInput, folder_id: folderId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert('Error generating note: ' + data.error);
-                } else {
-                    contentArea.value = data.content;
-                }
-            })
-            .catch(error => console.error('Error sending to ChatGPT:', error));
+
+            const noteData = { title: userTitle, input: userInput, folder_id: folderId };
+
+            sendNoteRequest('/api/v1/notes/generate', 'POST', noteData)
+                .then(data => {
+                    if (data && data.content) {
+                        contentArea.value = data.content;
+                    } else {
+                        alert('Error generating note.');
+                    }
+                });
         }
+    });
+}
+
+export function handleSaveNote() {
+    document.querySelector('.container').addEventListener('click', function(event) {
+        if (event.target.classList.contains('save-note-btn')) {
+            const form = event.target.closest('form');
+            const titleInput = form.querySelector('input[type="text"]');
+            const contentArea = form.querySelector('textarea');
+            const userTitle = titleInput.value;
+            const userInput = contentArea.value;
+            const folderId = document.querySelector('.folder-toggle').getAttribute('data-folder-id');
+
+            if (!userTitle.trim()) {
+                alert('Title is required.');
+                return;
+            }
+
+            const noteData = { title: userTitle, input: userInput, folder_id: folderId };
+
+            sendNoteRequest('/api/v1/notes/save', 'POST', noteData)
+                .then(() => alert('Note saved successfully!'));
+        }
+    });
+}
+
+export function handleSaveEditedNote() {
+    document.getElementById('edit-note-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const titleInput = document.getElementById('note-title');
+        const contentArea = document.getElementById('note-content');
+        const userTitle = titleInput.value;
+        const userInput = contentArea.value;
+        const noteId = document.getElementById('note-id').value;
+        const folderId = document.getElementById('note-folder').value;
+
+        if (!userTitle.trim()) {
+            alert('Title is required.');
+            return;
+        }
+
+        const noteData = { title: userTitle, content: userInput, folder_id: folderId };
+
+        sendNoteRequest(`/api/v1/notes/${noteId}`, 'PUT', noteData)
+            .then(() => window.location.reload());
     });
 }

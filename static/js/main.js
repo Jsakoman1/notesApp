@@ -1,7 +1,6 @@
-import { showNoteContent, createNewNote, generateNote } from './noteActions.js';
+import { handleDragStart, handleDragEnd, handleDragOver, handleDragLeave, handleDrop } from './dragDrop.js';
+import { showNoteContent, createNewNote, generateNote, handleSaveNote, handleSaveEditedNote } from './noteActions.js';
 import { createFolder, editFolder, deleteFolder } from './folderActions.js';
-import { handleSaveNote } from './formHandler.js';
-import { handleDragStart, handleDragEnd, handleDragOver, handleDragLeave, handleDrop } from './dragActions.js'; // Or from './dragDrop.js'
 
 // Call the functions to initialize the app
 showNoteContent();
@@ -9,6 +8,7 @@ createNewNote();
 generateNote();
 createFolder();
 handleSaveNote();
+handleSaveEditedNote();
 
 document.querySelector('.container').addEventListener('click', function(event) {
     // Handle folder actions (edit, delete)
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         note.addEventListener('dragend', handleDragEnd);
     });
 
-    // Add drag and drop listeners to the folders
+    // Add drag and drop listeners to folders
     const folders = document.querySelectorAll('.folder');
     folders.forEach(folder => {
         folder.addEventListener('dragover', handleDragOver);

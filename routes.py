@@ -46,6 +46,25 @@ def get_note(note_id):
     else:
         return jsonify({"error": "Note not found"}), 404
 
+@main_routes.route('/api/v1/notes/<int:note_id>', methods=['PUT'])
+def update_note(note_id):
+    note = Note.query.get(note_id)
+    if not note:
+        return jsonify({"error": "Note not found"}), 404
+    
+    data = request.get_json()
+    note.title = data.get('title')
+    note.content = data.get('content')
+    note.folder_id = data.get('folder_id')
+
+    db.session.commit()
+    return jsonify({
+        'id': note.id,
+        'title': note.title,
+        'content': note.content,
+        'folder_id': note.folder_id
+    }), 200
+
 # Create folder
 @main_routes.route('/api/v1/folders', methods=['POST'])
 def create_folder():
