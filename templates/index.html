@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes App</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dragDrop.js') }}" defer></script>
 </head>
 <body>
@@ -19,13 +19,13 @@
             <h2>Folders</h2>
             <ul>
                 {% for folder in folders %}
-                <li id="folder-{{ folder.id }}" class="folder" data-folder-id="{{ folder.id }}" draggable="true" ondragover="allowDrop(event)" ondrop="drop(event)">
+                <li id="folder-{{ folder.id }}" class="folder" data-folder-id="{{ folder.id }}" draggable="true">
                     <a href="javascript:void(0);" class="folder-toggle">{{ folder.name }}</a>
                     <button class="edit-folder-btn" data-folder-id="{{ folder.id }}">Rename</button>
                     <button class="delete-folder-btn" data-folder-id="{{ folder.id }}">Delete</button>
                     <ul id="folder-{{ folder.id }}-notes" style="display:block;">
                         {% for note in folder.notes %}
-                        <li id="note-{{ note.id }}" class="note" draggable="true" data-note-id="{{ note.id }}" onclick="showNoteContent('{{ note.id }}')" ondragstart="dragStart(event)">
+                        <li id="note-{{ note.id }}" class="note" draggable="true" data-note-id="{{ note.id }}">
                             {{ note.title }}
                         </li>
                         {% endfor %}

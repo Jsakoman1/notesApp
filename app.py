@@ -6,6 +6,7 @@ from routes import main_routes
 import openai
 
 
+
 app = Flask(__name__)
 
 # Configure database URI
