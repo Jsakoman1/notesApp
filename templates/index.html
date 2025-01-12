@@ -23,7 +23,7 @@
                     <a href="javascript:void(0);" class="folder-toggle">{{ folder.name }}</a>
                     <button class="edit-folder-btn" data-folder-id="{{ folder.id }}">Rename</button>
                     <button class="delete-folder-btn" data-folder-id="{{ folder.id }}">Delete</button>
-                    <ul id="folder-{{ folder.id }}-notes" style="display:block;">
+                    <ul id="folder-{{ folder.id }}-notes">
                         {% for note in folder.notes %}
                         <li id="note-{{ note.id }}" class="note" draggable="true" data-note-id="{{ note.id }}">
                             {{ note.title }}

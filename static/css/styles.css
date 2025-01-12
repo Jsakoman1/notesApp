@@ -3,7 +3,7 @@ body {
     font-family: 'Helvetica Neue', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #f0f4f8, #e6e9f0);
+    background: linear-gradient(135deg, #f9f9f9, #e6e9f0);
     color: #333;
 }
 
@@ -12,16 +12,17 @@ header {
     color: white;
     padding: 40px;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #0056b3;
 }
 
 header h1 {
-    font-size: 48px;
+    font-size: 36px;
     margin: 0;
 }
 
 header p {
-    font-size: 20px;
+    font-size: 18px;
     margin: 5px 0;
 }
 
@@ -29,16 +30,18 @@ header p {
 .container {
     display: flex;
     flex-wrap: wrap;
-    height: calc(100vh - 80px); /* Adjust container height for header */
-    padding: 20px;
+    height: calc(100vh - 80px);
+    padding: 10px;
+    justify-content: space-between;
 }
 
 .sidebar {
-    width: 260px;
+    width: 280px;
     padding: 20px;
     background-color: #ffffff;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
+    border-radius: 8px;
 }
 
 .content {
@@ -46,7 +49,8 @@ header p {
     padding: 20px;
     background-color: #ffffff;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
+    border-radius: 8px;
+    max-width: 75%;
 }
 
 /* Buttons */
@@ -59,6 +63,8 @@ button {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 100%;
+    font-size: 16px;
 }
 
 button:hover {
@@ -80,33 +86,7 @@ form button:hover {
 }
 
 /* Folder and Note Styles */
-.folder {
-    margin-bottom: 15px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    list-style-type: none; /* Remove bullets */
-}
-
-.folder:hover {
-    background-color: #f4f9ff;
-    transform: scale(1.02);
-}
-
-.folder ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.folder li {
-    margin: 5px 0;
-}
-
-.note {
+.folder, .note {
     padding: 15px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -115,29 +95,21 @@ form button:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    list-style-type: none; /* Remove bullets */
+    list-style-type: none;
 }
 
-.note:hover {
+.folder:hover, .note:hover {
     background-color: #f4f9ff;
     transform: scale(1.02);
 }
 
-/* Folder Drop Target Styling */
-.folder.droppable {
-    background-color: #e0f7ff;
-    border: 2px dashed #007bff;
+.folder ul, .note ul {
+    list-style-type: none;
+    padding-left: 20px;
 }
 
-/* Dragging State */
-.note.dragging {
-    opacity: 0.5;
-}
-
-/* Highlighting Folder While Dragging */
-.folder.dragover {
-    background-color: #e0f7ff; /* Light blue background for folder when dragging note */
-    border: 2px dashed #007bff; /* Blue dashed border when dragging */
+.folder li, .note li {
+    margin: 5px 0;
 }
 
 /* Form Styles */
@@ -155,14 +127,23 @@ form input, form textarea, form select {
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
+        padding: 15px;
     }
 
-    .sidebar {
+    .sidebar, .content {
         width: 100%;
         box-shadow: none;
     }
 
-    .content {
-        width: 100%;
+    header h1 {
+        font-size: 32px;
+    }
+
+    header p {
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 14px;
     }
 }
