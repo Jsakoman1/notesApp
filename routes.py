@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, render_template
 from db import db, Folder, Note
 import openai
+import os
 
 client = openai.OpenAI()
 
@@ -151,19 +152,23 @@ def generate_note():
         return jsonify({"error": "Title is required"}), 400
 
     try:
-        response = client.Completion.create(
+        # Use the 'client' object to call the OpenAI API
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",  # or "gpt-4"
             messages=[
-                {"role": "system", "content": "You are a note assistant."},
+                {"role": "system", "content": "Ti si pomoćnik za bilješke."},
                 {"role": "user", "content": user_input}
             ]
         )
-        note_content = response.choices[0].message['content']
+        
+        # Get the generated content from the response
+        note_content = response.choices[0].message.content
 
-        # Return the generated content, without saving it to the database
+        # Send only the generated content back as a response
         return jsonify({
             "content": note_content
         }), 200
 
     except Exception as e:
+        # Handle any errors that occur
         return jsonify({"error": str(e)}), 500
