@@ -18,7 +18,9 @@ export function showNoteContent(noteId) {
             if (data) {
                 document.getElementById('note-id').value = data.id;
                 document.getElementById('note-title').value = data.title;
-                document.getElementById('note-content').value = data.content;
+                // Set the content in the Quill editor
+                const quill = document.querySelector('#note-content').__quill;
+                quill.root.innerHTML = data.content; // Set the note content in Quill editor
                 document.getElementById('note-folder').value = data.folder_id;
                 document.getElementById('note-edit-form').style.display = 'block';
             } else {
@@ -36,7 +38,8 @@ export function createNewNote() {
     document.getElementById('create-note-form').addEventListener('submit', function(event) {
         event.preventDefault();
         const title = document.getElementById('new-note-title').value;
-        const content = document.getElementById('new-note-content').value;
+        // Get content from Quill editor
+        const content = document.querySelector('#new-note-content').__quill.root.innerHTML;
         const folderId = document.querySelector('.folder-toggle').getAttribute('data-folder-id');
 
         const noteData = { title, content, folder_id: folderId };
@@ -54,9 +57,9 @@ export function generateNote() {
         if (event.target.classList.contains('generate-note-btn')) {
             const form = event.target.closest('form');
             const titleInput = form.querySelector('input[type="text"]');
-            const contentArea = form.querySelector('textarea');
+            const contentArea = form.querySelector('.quill-editor'); // Quill editor container
             const userTitle = titleInput.value;
-            const userInput = contentArea.value;
+            const userInput = contentArea.__quill.root.innerHTML; // Get content from Quill editor
             const folderId = document.querySelector('.folder-toggle').getAttribute('data-folder-id');
 
             if (!userTitle.trim()) {
@@ -69,7 +72,7 @@ export function generateNote() {
             sendNoteRequest('/api/v1/notes/generate', 'POST', noteData)
                 .then(data => {
                     if (data && data.content) {
-                        contentArea.value = data.content;
+                        contentArea.__quill.root.innerHTML = data.content; // Update Quill editor content
                     } else {
                         alert('Error generating note.');
                     }
@@ -83,9 +86,9 @@ export function handleSaveNote() {
         if (event.target.classList.contains('save-note-btn')) {
             const form = event.target.closest('form');
             const titleInput = form.querySelector('input[type="text"]');
-            const contentArea = form.querySelector('textarea');
+            const contentArea = form.querySelector('.quill-editor'); // Quill editor container
             const userTitle = titleInput.value;
-            const userInput = contentArea.value;
+            const userInput = contentArea.__quill.root.innerHTML; // Get content from Quill editor
             const folderId = document.querySelector('.folder-toggle').getAttribute('data-folder-id');
 
             if (!userTitle.trim()) {
@@ -108,7 +111,7 @@ export function handleSaveEditedNote() {
         const titleInput = document.getElementById('note-title');
         const contentArea = document.getElementById('note-content');
         const userTitle = titleInput.value;
-        const userInput = contentArea.value;
+        const userInput = contentArea.__quill.root.innerHTML; // Get content from Quill editor
         const noteId = document.getElementById('note-id').value;
         const folderId = document.getElementById('note-folder').value;
 

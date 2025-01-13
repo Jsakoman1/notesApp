@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dragDrop.js') }}" defer></script>
+
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 </head>
 <body>
     <header class="header">
@@ -47,7 +53,7 @@
                     <input type="text" name="title" id="note-title" required>
 
                     <label for="content">Content</label>
-                    <textarea name="content" id="note-content" required></textarea>
+                    <div id="note-content" class="quill-editor"></div>
 
                     <label for="folder">Folder</label>
                     <select name="folder" id="note-folder">
@@ -67,7 +73,7 @@
                     <input type="text" id="new-note-title" required>
 
                     <label for="new-note-content">Content</label>
-                    <textarea id="new-note-content" required></textarea>
+                    <div id="new-note-content" class="quill-editor"></div>
                     <button type="button" class="generate-note-btn">Generate from ChatGPT</button>
 
                     <button type="submit">Create Note</button>
@@ -75,6 +81,48 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Initialize Quill editors for note content fields
+        var quillEdit = new Quill('#note-content', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'align': [] }],
+                    ['link'],
+                    ['blockquote'],
+                    ['image']
+                ]
+            }
+        });
+
+        var quillNew = new Quill('#new-note-content', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'align': [] }],
+                    ['link'],
+                    ['blockquote'],
+                    ['image']
+                ]
+            }
+        });
+
+        // On form submission, retrieve the content from Quill editors and add to the form data
+        document.getElementById('edit-note-form').onsubmit = function() {
+            document.getElementById('note-content').value = quillEdit.root.innerHTML;
+        };
+
+        document.getElementById('create-note-form').onsubmit = function() {
+            document.getElementById('new-note-content').value = quillNew.root.innerHTML;
+        };
+    </script>
 
 </body>
 </html>

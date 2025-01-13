@@ -1,16 +1,18 @@
 from flask import Blueprint, request, jsonify, render_template
 from db import db, Folder, Note
-from openai import OpenAI
+import openai
 
-client = OpenAI()
+client = openai.OpenAI()
 
 main_routes = Blueprint('main_routes', __name__)
 
+# Route to display all folders on the main page
 @main_routes.route('/')
 def index():
     folders = Folder.query.all()
     return render_template('index.html', folders=folders)
 
+# Create a new note
 @main_routes.route('/api/v1/notes', methods=['POST'])
 def create_note():
     data = request.get_json()
@@ -21,6 +23,7 @@ def create_note():
     if not title or not content:
         return jsonify({"message": "Title and content are required"}), 400
 
+    # If no folder_id is provided, use the default folder 'All Notes'
     folder = Folder.query.get(folder_id) if folder_id else Folder.query.filter_by(name='All Notes').first()
     if not folder:
         folder = Folder(name='All Notes')
@@ -31,8 +34,14 @@ def create_note():
     db.session.add(new_note)
     db.session.commit()
 
-    return jsonify({"id": new_note.id, "title": new_note.title, "content": new_note.content, "folder_id": new_note.folder_id}), 201
+    return jsonify({
+        "id": new_note.id,
+        "title": new_note.title,
+        "content": new_note.content,
+        "folder_id": new_note.folder_id
+    }), 201
 
+# Fetch a single note by its ID
 @main_routes.route('/api/v1/notes/<int:note_id>', methods=['GET'])
 def get_note(note_id):
     note = Note.query.get(note_id)
@@ -46,6 +55,7 @@ def get_note(note_id):
     else:
         return jsonify({"error": "Note not found"}), 404
 
+# Update an existing note
 @main_routes.route('/api/v1/notes/<int:note_id>', methods=['PUT'])
 def update_note(note_id):
     note = Note.query.get(note_id)
@@ -65,7 +75,7 @@ def update_note(note_id):
         'folder_id': note.folder_id
     }), 200
 
-# Create folder
+# Create a new folder
 @main_routes.route('/api/v1/folders', methods=['POST'])
 def create_folder():
     folder_data = request.get_json()
@@ -74,7 +84,7 @@ def create_folder():
     db.session.commit()
     return jsonify(id=new_folder.id, name=new_folder.name), 201
 
-# Rename folder
+# Rename an existing folder
 @main_routes.route('/api/v1/folders/<int:folder_id>', methods=['PUT'])
 def edit_folder(folder_id):
     folder_data = request.get_json()
@@ -86,7 +96,7 @@ def edit_folder(folder_id):
     else:
         return jsonify({"error": "Folder not found"}), 404
 
-# Delete folder
+# Delete a folder
 @main_routes.route('/api/v1/folders/<int:folder_id>', methods=['DELETE'])
 def delete_folder(folder_id):
     folder = Folder.query.get(folder_id)
@@ -97,6 +107,7 @@ def delete_folder(folder_id):
     else:
         return jsonify({"error": "Folder not found"}), 404
 
+# Move a note to another folder
 @main_routes.route('/api/v1/notes/<int:note_id>/move', methods=['PUT'])
 def move_note(note_id):
     data = request.get_json()
@@ -111,6 +122,7 @@ def move_note(note_id):
         return jsonify({"success": True, "note": {"id": note.id, "title": note.title, "folder_id": note.folder_id}}), 200
     return jsonify({"error": "Note or Folder not found"}), 404
 
+# Get all notes in a specific folder
 @main_routes.route('/api/v1/folders/<int:folder_id>/notes', methods=['GET'])
 def get_notes_in_folder(folder_id):
     folder = Folder.query.get(folder_id)
@@ -125,7 +137,7 @@ def get_notes_in_folder(folder_id):
     else:
         return jsonify({"error": "Folder not found"}), 404
 
-
+# Generate a note based on user input via OpenAI
 @main_routes.route('/api/v1/notes/generate', methods=['POST'])
 def generate_note():
     data = request.get_json()
@@ -139,14 +151,16 @@ def generate_note():
         return jsonify({"error": "Title is required"}), 400
 
     try:
-        response = client.chat.completions.create(model="gpt-3.5-turbo",  # or "gpt-4"
-        messages=[
-            {"role": "system", "content": "Ti si pomoćnik za bilješke."},
-            {"role": "user", "content": user_input}
-        ])
-        note_content = response.choices[0].message.content
+        response = client.Completion.create(
+            model="gpt-3.5-turbo",  # or "gpt-4"
+            messages=[
+                {"role": "system", "content": "You are a note assistant."},
+                {"role": "user", "content": user_input}
+            ]
+        )
+        note_content = response.choices[0].message['content']
 
-        # Send only generated content back, without saving
+        # Return the generated content, without saving it to the database
         return jsonify({
             "content": note_content
         }), 200
