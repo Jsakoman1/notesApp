@@ -32,7 +32,8 @@
                     <ul id="folder-{{ folder.id }}-notes">
                         {% for note in folder.notes %}
                         <li id="note-{{ note.id }}" class="note" draggable="true" data-note-id="{{ note.id }}">
-                            {{ note.title }}
+                            <span>{{ note.title }}</span>
+                            <button class="delete-note-btn" data-note-id="{{ note.id }}">Delete</button>
                         </li>
                         {% endfor %}
                     </ul>
@@ -44,41 +45,42 @@
         </div>
 
         <div class="content">
-            <h2>Select a Note to Edit</h2>
-            <div id="note-edit-form" style="display:none;">
-                <h3>Edit Note</h3>
-                <form id="edit-note-form">
-                    <input type="hidden" name="note_id" id="note-id">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" id="note-title" required>
+            <div class="note-forms-container">
+    <div id="note-edit-form-container" class="note-form-container">
+        <div id="note-edit-form" style="display:none;">
+            <h3>Edit Note</h3>
+            <form id="edit-note-form">
+                <input type="hidden" name="note_id" id="note-id">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="note-title" required>
+                <label for="content">Content</label>
+                <div id="note-content" class="quill-editor"></div>
+                <label for="folder">Folder</label>
+                <select name="folder" id="note-folder">
+                    {% for folder in folders %}
+                        <option value="{{ folder.id }}">{{ folder.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="generate-note-btn">Generate from ChatGPT</button>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
 
-                    <label for="content">Content</label>
-                    <div id="note-content" class="quill-editor"></div>
-
-                    <label for="folder">Folder</label>
-                    <select name="folder" id="note-folder">
-                        {% for folder in folders %}
-                            <option value="{{ folder.id }}">{{ folder.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="button" class="generate-note-btn">Generate from ChatGPT</button>
-                    <button type="submit">Save Changes</button>
-                </form>
-            </div>
-
-            <div id="new-note-form" style="display:none;">
-                <h3>Create New Note</h3>
-                <form id="create-note-form">
-                    <label for="new-note-title">Title</label>
-                    <input type="text" id="new-note-title" required>
-
-                    <label for="new-note-content">Content</label>
-                    <div id="new-note-content" class="quill-editor"></div>
-                    <button type="button" class="generate-note-btn">Generate from ChatGPT</button>
-
-                    <button type="submit">Create Note</button>
-                </form>
-            </div>
+    <div id="new-note-form-container" class="note-form-container">
+        <div id="new-note-form" style="display:none;">
+            <h3>Create New Note</h3>
+            <form id="create-note-form">
+                <label for="new-note-title">Title</label>
+                <input type="text" id="new-note-title" required>
+                <label for="new-note-content">Content</label>
+                <div id="new-note-content" class="quill-editor"></div>
+                <button type="button" class="generate-note-btn">Generate from ChatGPT</button>
+                <button type="submit">Create Note</button>
+            </form>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 

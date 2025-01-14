@@ -1,5 +1,5 @@
 import { handleDragStart, handleDragEnd, handleDragOver, handleDragLeave, handleDrop } from './dragDrop.js';
-import { showNoteContent, createNewNote, generateNote, handleSaveNote, handleSaveEditedNote } from './noteActions.js';
+import { showNoteContent, createNewNote, generateNote, handleSaveNote, handleSaveEditedNote, deleteNote } from './noteActions.js';
 import { createFolder, editFolder, deleteFolder } from './folderActions.js';
 
 // Call the functions to initialize the app
@@ -24,6 +24,13 @@ document.querySelector('.container').addEventListener('click', function(event) {
     if (event.target.classList.contains('note')) {
         const noteId = event.target.getAttribute('data-note-id');
         showNoteContent(noteId); // Show note in the editor
+    }
+    // Handle note deletion
+    if (event.target.classList.contains('delete-note-btn')) {
+        const noteId = event.target.getAttribute('data-note-id');
+        if (noteId) {
+            deleteNote(noteId); // Call the delete function
+        }
     }
 });
 

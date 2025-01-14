@@ -76,6 +76,21 @@ def update_note(note_id):
         'folder_id': note.folder_id
     }), 200
 
+# Delete a note
+@main_routes.route('/api/v1/notes/<int:note_id>', methods=['DELETE'])
+def delete_note(note_id):
+    note = Note.query.get(note_id)
+    if not note:
+        return jsonify({"error": "Note not found"}), 404
+
+    try:
+        db.session.delete(note)
+        db.session.commit()
+        return jsonify({"message": "Note deleted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Failed to delete note"}), 500
+
 # Create a new folder
 @main_routes.route('/api/v1/folders', methods=['POST'])
 def create_folder():

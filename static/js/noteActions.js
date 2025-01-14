@@ -126,3 +126,19 @@ export function handleSaveEditedNote() {
             .then(() => window.location.reload());
     });
 }
+
+export function deleteNote(noteId) {
+    if (!confirm('Are you sure you want to delete this note?')) {
+        return; // User canceled the deletion
+    }
+
+    sendNoteRequest(`/api/v1/notes/${noteId}`, 'DELETE')
+        .then(response => {
+            if (response && response.message === 'Note deleted successfully') {
+                window.location.reload(); // Reload to update the UI
+            } else {
+                alert('Failed to delete the note.');
+            }
+        })
+        .catch(error => console.error('Error deleting note:', error));
+}
