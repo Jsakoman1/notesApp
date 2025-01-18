@@ -25,6 +25,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize database
 db.init_app(app)
+
+# Register blueprints
 app.register_blueprint(pages_routes)
 app.register_blueprint(notes_routes)
 
@@ -45,13 +47,12 @@ def initialize_db(app):
             db.session.add(all_notes_folder)
             db.session.commit()
 
-# Ensure tables and default folder exist
+# Ensure tables and default folder exist and register emails routes
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         initialize_db(app)  # Pass 'app' as an argument
-
-    # Register emails routes after app context
-    register_emails_routes()
+        # Register emails routes after app context
+        register_emails_routes()
 
     app.run(debug=True)
