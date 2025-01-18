@@ -18,3 +18,8 @@ def index():
 def notes():
     folders = Folder.query.all()
     return render_template('notes.html', folders=folders)
+
+@pages_routes.route('/emails')
+def emails():
+    folders = Folder.query.all()
+    return render_template('emails.html', folders=folders)
