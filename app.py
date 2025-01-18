@@ -14,16 +14,14 @@ app = Flask(__name__)
 if os.getenv('FLASK_ENV') == 'development':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dev_notes.db'
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-        'DATABASE_URL',
-    )
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
-# Set the secret key for GMAIL from the environment variable
+# Set the secret key from the environment variable
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize database
+# Initialize the database
 db.init_app(app)
 
 # Register blueprints
@@ -50,7 +48,6 @@ def initialize_db(app):
 # Ensure tables and default folder exist and register emails routes
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
         initialize_db(app)  # Pass 'app' as an argument
         # Register emails routes after app context
         register_emails_routes()
