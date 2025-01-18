@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eMails</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/emails.js') }}" defer></script>
 </head>
 <body>
     {% include 'navbar.html' %}
@@ -12,5 +13,20 @@
         <h1>eMails</h1>
         <p>by Sakoman</p>
     </header>
+    <main>
+        <p> Neki content</p>
+        <form id="email-form">
+            <label for="to">Recipient's Email:</label>
+            <input type="email" id="to" name="to" required><br><br>
+            
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required><br><br>
+            
+            <label for="body">Body:</label>
+            <textarea id="body" name="body" rows="5" required></textarea><br><br>
+            
+            <button type="submit">Send Email</button>
+        </form>
+    </main>
 </body>
 </html>

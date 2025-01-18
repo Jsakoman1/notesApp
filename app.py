@@ -5,9 +5,9 @@ from db import db, Folder, Note
 from routes.routes_notes import notes_routes
 from routes.routes_pages import pages_routes
 import openai
+import datetime
 
-
-
+# Define your Flask app
 app = Flask(__name__)
 
 # Configure database URI
@@ -18,13 +18,22 @@ else:
         'DATABASE_URL',
     )
 
+# Set the secret key for GMAIL from the environment variable
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Initialize database
 db.init_app(app)
 app.register_blueprint(pages_routes)
 app.register_blueprint(notes_routes)
 
+# Avoid circular imports: Register emails routes after app setup
+def register_emails_routes():
+    from routes.routes_emails import emails_routes  # Import inside function to avoid circular import
+    app.register_blueprint(emails_routes)
+
+# Initialize and create default folder
 def initialize_db(app):
     with app.app_context():
         # Create tables if they don't exist
@@ -39,8 +48,10 @@ def initialize_db(app):
 # Ensure tables and default folder exist
 if __name__ == '__main__':
     with app.app_context():
-        # Create tables if they don't exist
         db.create_all()
         initialize_db(app)  # Pass 'app' as an argument
+
+    # Register emails routes after app context
+    register_emails_routes()
 
     app.run(debug=True)
