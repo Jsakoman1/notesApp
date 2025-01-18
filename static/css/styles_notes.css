@@ -1,0 +1,43 @@
+/* Folder and Note Styles */
+.folder, .note {
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    list-style-type: none;
+}
+
+.folder:hover, .note:hover {
+    background-color: #f4f9ff;
+    transform: scale(1.02);
+}
+
+.folder ul, .note ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.folder li, .note li {
+    margin: 5px 0;
+}
+
+/* Form Styles */
+form input, form textarea, form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+}
+
+.quill-editor {
+    min-height: calc(15 * 1.5em); /* Minimum height for 15 lines, adjust the multiplier if needed */
+    font-size: 16px; /* Set font size for consistency */
+    line-height: 1.5; /* Adjust line height for better readability */
+}

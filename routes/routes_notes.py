@@ -5,16 +5,16 @@ import os
 
 client = openai.OpenAI()
 
-main_routes = Blueprint('main_routes', __name__)
+notes_routes = Blueprint('notes_routes', __name__)
 
 # Route to display all folders on the main page
-@main_routes.route('/')
+@notes_routes.route('/')
 def index():
     folders = Folder.query.all()
     return render_template('index.html', folders=folders)
 
 # Create a new note
-@main_routes.route('/api/v1/notes', methods=['POST'])
+@notes_routes.route('/api/v1/notes', methods=['POST'])
 def create_note():
     data = request.get_json()
     title = data.get('title')
@@ -43,7 +43,7 @@ def create_note():
     }), 201
 
 # Fetch a single note by its ID
-@main_routes.route('/api/v1/notes/<int:note_id>', methods=['GET'])
+@notes_routes.route('/api/v1/notes/<int:note_id>', methods=['GET'])
 def get_note(note_id):
     note = Note.query.get(note_id)
     if note:
@@ -57,7 +57,7 @@ def get_note(note_id):
         return jsonify({"error": "Note not found"}), 404
 
 # Update an existing note
-@main_routes.route('/api/v1/notes/<int:note_id>', methods=['PUT'])
+@notes_routes.route('/api/v1/notes/<int:note_id>', methods=['PUT'])
 def update_note(note_id):
     note = Note.query.get(note_id)
     if not note:
@@ -77,7 +77,7 @@ def update_note(note_id):
     }), 200
 
 # Delete a note
-@main_routes.route('/api/v1/notes/<int:note_id>', methods=['DELETE'])
+@notes_routes.route('/api/v1/notes/<int:note_id>', methods=['DELETE'])
 def delete_note(note_id):
     note = Note.query.get(note_id)
     if not note:
@@ -92,7 +92,7 @@ def delete_note(note_id):
         return jsonify({"error": "Failed to delete note"}), 500
 
 # Create a new folder
-@main_routes.route('/api/v1/folders', methods=['POST'])
+@notes_routes.route('/api/v1/folders', methods=['POST'])
 def create_folder():
     folder_data = request.get_json()
     new_folder = Folder(name=folder_data['name'])
@@ -101,7 +101,7 @@ def create_folder():
     return jsonify(id=new_folder.id, name=new_folder.name), 201
 
 # Rename an existing folder
-@main_routes.route('/api/v1/folders/<int:folder_id>', methods=['PUT'])
+@notes_routes.route('/api/v1/folders/<int:folder_id>', methods=['PUT'])
 def edit_folder(folder_id):
     folder_data = request.get_json()
     folder = Folder.query.get(folder_id)
@@ -113,7 +113,7 @@ def edit_folder(folder_id):
         return jsonify({"error": "Folder not found"}), 404
 
 # Delete a folder
-@main_routes.route('/api/v1/folders/<int:folder_id>', methods=['DELETE'])
+@notes_routes.route('/api/v1/folders/<int:folder_id>', methods=['DELETE'])
 def delete_folder(folder_id):
     folder = Folder.query.get(folder_id)
     if folder:
@@ -124,7 +124,7 @@ def delete_folder(folder_id):
         return jsonify({"error": "Folder not found"}), 404
 
 # Move a note to another folder
-@main_routes.route('/api/v1/notes/<int:note_id>/move', methods=['PUT'])
+@notes_routes.route('/api/v1/notes/<int:note_id>/move', methods=['PUT'])
 def move_note(note_id):
     data = request.get_json()
     folder_id = data.get('folder_id')
@@ -139,7 +139,7 @@ def move_note(note_id):
     return jsonify({"error": "Note or Folder not found"}), 404
 
 # Get all notes in a specific folder
-@main_routes.route('/api/v1/folders/<int:folder_id>/notes', methods=['GET'])
+@notes_routes.route('/api/v1/folders/<int:folder_id>/notes', methods=['GET'])
 def get_notes_in_folder(folder_id):
     folder = Folder.query.get(folder_id)
     if folder:
@@ -154,7 +154,7 @@ def get_notes_in_folder(folder_id):
         return jsonify({"error": "Folder not found"}), 404
 
 # Generate a note based on user input via OpenAI
-@main_routes.route('/api/v1/notes/generate', methods=['POST'])
+@notes_routes.route('/api/v1/notes/generate', methods=['POST'])
 def generate_note():
     data = request.get_json()
     user_input = data.get('input')

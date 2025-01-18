@@ -2,7 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
 from db import db, Folder, Note
-from routes import main_routes
+from routes.routes_notes import notes_routes
+from routes.routes_pages import pages_routes
 import openai
 
 
@@ -21,7 +22,8 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-app.register_blueprint(main_routes)
+app.register_blueprint(pages_routes)
+app.register_blueprint(notes_routes)
 
 def initialize_db(app):
     with app.app_context():
