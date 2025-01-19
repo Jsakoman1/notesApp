@@ -6,6 +6,7 @@ from routes.routes_notes import notes_routes
 from routes.routes_pages import pages_routes
 import openai
 import datetime
+from routes.routes_emails import emails_routes
 
 # Define your Flask app
 app = Flask(__name__)
@@ -28,13 +29,11 @@ db.init_app(app)
 app.register_blueprint(pages_routes)
 app.register_blueprint(notes_routes)
 
-# Avoid circular imports: Register emails routes after app setup
-def register_emails_routes():
-    from routes.routes_emails import emails_routes  # Import inside function to avoid circular import
-    app.register_blueprint(emails_routes, url_prefix='/emails')
+# Register email routes after app setup
+app.register_blueprint(emails_routes, url_prefix='/emails')
 
 # Initialize and create default folder
-def initialize_db(app):
+def initialize_db():
     with app.app_context():
         # Create tables if they don't exist
         db.create_all()
@@ -45,11 +44,10 @@ def initialize_db(app):
             db.session.add(all_notes_folder)
             db.session.commit()
 
-# Ensure tables and default folder exist and register emails routes
+# Ensure tables and default folder exist
 if __name__ == '__main__':
     with app.app_context():
-        initialize_db(app)  # Pass 'app' as an argument
-        # Register emails routes after app context
-        register_emails_routes()
+        initialize_db()  # Pass 'app' as an argument
 
-    app.run(debug=False)
+    # Start the Flask application
+    app.run(debug=True)
