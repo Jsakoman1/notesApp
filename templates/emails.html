@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eMails</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_emails.css') }}">
     <script src="{{ url_for('static', filename='js/emails.js') }}" defer></script>
 </head>
 <body>
@@ -29,7 +30,8 @@
             
             <label for="body">Body:</label>
             <textarea id="body" name="body" rows="5" required></textarea><br><br>
-            
+
+            <button type="button" id="generate-email-btn">Generate Email</button>
             <button type="submit">Send Email</button>
         </form>
     </main>

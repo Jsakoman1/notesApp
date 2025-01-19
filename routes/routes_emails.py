@@ -3,8 +3,10 @@ from flask import Blueprint, request, jsonify, current_app as app
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import openai
 
 emails_routes = Blueprint('emails_routes', __name__)
+client = openai.OpenAI()
 
 # Route to send email using Titan Mail SMTP
 @emails_routes.route('/send_email', methods=['POST'])
@@ -51,3 +53,39 @@ def test_email():
         return "Successfully connected to TitanMail SMTP server."
     except Exception as e:
         return f"Failed to connect: {e}"
+    
+@emails_routes.route('/generate_email', methods=['POST'])
+def generate_email():
+    data = request.get_json()
+    content = data.get('content')  # Expecting the content field from the JS request
+
+    if not content:
+        return jsonify({"error": "Content is required"}), 400
+
+    try:
+        # Step 1: Generate the body content of the email using OpenAI
+        response_body = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an assistant helping to generate email body text."},
+                {"role": "user", "content": f"Write an email in a natural tone with the following content: {content} (Do not add 'Body:' prefix, just the email content)"}
+            ]
+        )
+
+        email_body = response_body.choices[0].message.content.strip()
+
+        # Step 2: Use the generated body to create the subject (without adding 'Subject:' prefix)
+        response_subject = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an assistant helping to generate email subjects."},
+                {"role": "user", "content": f"Generate a suitable subject for the following email body: {email_body} (Do not add 'Subject:' prefix, just the subject text)"}
+            ]
+        )
+
+        email_subject = response_subject.choices[0].message.content.strip()
+
+        return jsonify({"email_subject": email_subject, "email_body": email_body}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
