@@ -7,7 +7,7 @@ document.getElementById('email-form').addEventListener('submit', async function(
     const subject = document.getElementById('subject').value;
     const body = document.getElementById('body').value;
 
-    const response = await fetch('/send_email', {
+    const response = await fetch('/emails/send_email', {  // Updated to include '/emails'
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

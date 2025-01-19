@@ -31,7 +31,7 @@ app.register_blueprint(notes_routes)
 # Avoid circular imports: Register emails routes after app setup
 def register_emails_routes():
     from routes.routes_emails import emails_routes  # Import inside function to avoid circular import
-    app.register_blueprint(emails_routes)
+    app.register_blueprint(emails_routes, url_prefix='/emails')
 
 # Initialize and create default folder
 def initialize_db(app):
