@@ -33,7 +33,7 @@ app.register_blueprint(notes_routes)
 app.register_blueprint(emails_routes, url_prefix='/emails')
 
 # Initialize and create default folder
-def initialize_db():
+def initialize_db(app):
     with app.app_context():
         # Create tables if they don't exist
         db.create_all()
@@ -47,7 +47,7 @@ def initialize_db():
 # Ensure tables and default folder exist
 if __name__ == '__main__':
     with app.app_context():
-        initialize_db()  # Pass 'app' as an argument
+        initialize_db(app)  # Pass 'app' as an argument
 
     # Start the Flask application
     app.run(debug=True)
