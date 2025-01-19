@@ -2,17 +2,18 @@ from flask import Blueprint, request, jsonify, current_app as app
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import os
 
 emails_routes = Blueprint('emails_routes', __name__)
 
-# Route to send email using Titan Mail SMTP
+# Route to send email using SMTP
 @emails_routes.route('/send_email', methods=['POST'])
 def send_email():
     data = request.get_json()
 
-    # Fetch necessary data
-    sender_email = data.get('sender_email')  # Titan Mail email
-    sender_password = data.get('sender_password')  # Titan Mail password
+    # Fetch necessary data from the request
+    sender_email = data.get('sender_email')  # Sender's email
+    sender_password = data.get('sender_password')  # Sender's password
     recipient_email = data.get('recipient')  # Recipient's email
     subject = data.get('subject')  # Email subject
     content = data.get('content')  # Email body
@@ -22,9 +23,9 @@ def send_email():
         return jsonify({"error": "Missing required fields"}), 400
 
     try:
-        # Titan Mail SMTP configuration
-        smtp_server = "smtp.titan.email"
-        smtp_port = 587  # For TLS
+        # Use PythonAnywhere's SMTP server (or another SMTP service like Gmail)
+        smtp_server = "smtp.pythonanywhere.com"  # For PythonAnywhere, use their SMTP server
+        smtp_port = 587  # Port for TLS
 
         # Create email message
         message = MIMEMultipart()
@@ -33,7 +34,7 @@ def send_email():
         message["Subject"] = subject
         message.attach(MIMEText(content, "plain"))
 
-        # Send email using Titan Mail SMTP
+        # Send email using the SMTP server
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()  # Enable TLS encryption
             server.login(sender_email, sender_password)
