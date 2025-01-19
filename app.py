@@ -52,4 +52,4 @@ if __name__ == '__main__':
         # Register emails routes after app context
         register_emails_routes()
 
-    app.run(debug=True)
+    app.run(debug=False)
