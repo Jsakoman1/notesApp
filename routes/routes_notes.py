@@ -7,12 +7,6 @@ client = openai.OpenAI()
 
 notes_routes = Blueprint('notes_routes', __name__)
 
-# Route to display all folders on the main page
-@notes_routes.route('/')
-def index():
-    folders = Folder.query.all()
-    return render_template('index.html', folders=folders)
-
 # Create a new note
 @notes_routes.route('/api/v1/notes', methods=['POST'])
 def create_note():
