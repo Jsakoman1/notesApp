@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sako App</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script>
-        // JavaScript function to trigger the SMTP test
-        async function testEmailConnection() {
-            const response = await fetch('/test_email');
-            const result = await response.text();
-            alert(result);  // Show success or failure message in alert
-        }
+
+<script>
+    // JavaScript function to trigger the SMTP test
+    async function testEmailConnection() {
+        const response = await fetch('/emails/test_email');  // Updated to include '/emails'
+        const result = await response.text();
+        alert(result);  // Show success or failure message in alert
+    }
+
     </script>
 </head>
 <body>

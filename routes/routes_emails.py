@@ -56,3 +56,4 @@ def test_email():
         return "Successfully connected to TitanMail SMTP server."
     except Exception as e:
         return f"Failed to connect: {e}"
+    
