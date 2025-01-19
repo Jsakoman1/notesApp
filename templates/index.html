@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sako App</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        // JavaScript function to trigger the SMTP test
+        async function testEmailConnection() {
+            const response = await fetch('/test_email');
+            const result = await response.text();
+            alert(result);  // Show success or failure message in alert
+        }
+    </script>
 </head>
 <body>
     {% include 'navbar.html' %}
@@ -12,5 +20,11 @@
         <h1>SAKO APP</h1>
         <p>by Sakoman</p>
     </header>
+
+    <!-- Add the button to test SMTP connection -->
+    <section>
+        <h2>Test SMTP Connection</h2>
+        <button onclick="testEmailConnection()">Test Email Connection</button>
+    </section>
 </body>
 </html>
