@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app as app
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -42,4 +42,6 @@ def send_email():
         return jsonify({"message": "Email sent successfully!"}), 200
 
     except smtplib.SMTPException as error:
+        # Log the error to help debug
+        app.logger.error(f"Error while sending email: {error}")
         return jsonify({"error": f"Failed to send email: {str(error)}"}), 500
