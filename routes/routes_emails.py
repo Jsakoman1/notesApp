@@ -89,3 +89,53 @@ def generate_email():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@emails_routes.route('/process_audio', methods=['POST'])
+def process_audio():
+    try:
+        # Save the uploaded file
+        audio_file = request.files['audio']
+        file_path = f"/tmp/{audio_file.filename}"
+        audio_file.save(file_path)
+
+        # Transcribe the audio using Whisper
+        import whisper
+        model = whisper.load_model("base")  # Choose the desired model size
+        result = model.transcribe(file_path)
+        text = result['text']
+
+        # Generate email using the transcribed text
+        response = generate_email_from_text(text)
+
+        return jsonify(response), 200
+
+    except Exception as e:
+        app.logger.error(f"Error processing audio: {e}")
+        return jsonify({"error": f"Failed to process audio: {e}"}), 500
+    
+
+def generate_email_from_text(content):
+    try:
+        # Step 1: Generate the email body using OpenAI
+        response_body = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an assistant helping to generate email body text."},
+                {"role": "user", "content": f"Write an email in a natural tone with the following content: {content}"}
+            ]
+        )
+        email_body = response_body.choices[0].message.content.strip()
+
+        # Step 2: Generate the email subject using OpenAI
+        response_subject = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an assistant helping to generate email subjects."},
+                {"role": "user", "content": f"Generate a suitable subject for the following email body: {email_body}"}
+            ]
+        )
+        email_subject = response_subject.choices[0].message.content.strip()
+
+        return {"email_subject": email_subject, "email_body": email_body}
+    except Exception as e:
+        raise ValueError(f"Failed to generate email: {e}")
