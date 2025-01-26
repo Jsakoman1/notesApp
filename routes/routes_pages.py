@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template
-from db import db, Folder, Note
+from db import db, Folder, Note, Contact
 import openai
 import os
 
@@ -23,3 +23,4 @@ def notes():
 def emails():
     folders = Folder.query.all()
     return render_template('emails.html', folders=folders)
+

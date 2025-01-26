@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
-from db import db, Folder, Note
+from db import db, Folder, Note, Contact
 from routes.routes_notes import notes_routes
 from routes.routes_pages import pages_routes
+from routes.routes_contacts import contacts_routes
 import openai
 import datetime
 from routes.routes_emails import emails_routes
@@ -28,9 +29,8 @@ db.init_app(app)
 # Register blueprints
 app.register_blueprint(pages_routes)
 app.register_blueprint(notes_routes)
-
-# Register email routes after app setup
 app.register_blueprint(emails_routes, url_prefix='/emails')
+app.register_blueprint(contacts_routes, url_prefix='/contacts')
 
 # Initialize and create default folder
 def initialize_db(app):

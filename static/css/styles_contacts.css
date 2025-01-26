@@ -1,0 +1,18 @@
+/* Example custom styles for contacts page */
+body {
+    font-family: Arial, sans-serif;
+}
+
+#contacts-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#contacts-table th, #contacts-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+button {
+    margin: 5px;
+}
